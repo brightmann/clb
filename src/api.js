@@ -357,7 +357,7 @@ async function handleGetPosts(request, env) {
 
   // 获取分页数据（密码哈希不对外返回，受保护文章的摘要也不对外泄露）
   const { results } = await env.DB.prepare(
-    `SELECT id, title, slug, excerpt, cover_image, category, tags, created_at, published_at, password FROM posts ${where} ORDER BY published_at DESC LIMIT ? OFFSET ?`
+    `SELECT id, title, slug, excerpt, cover_image, category, tags, created_at, published_at, password FROM posts ${where} ORDER BY published_at DESC, id DESC LIMIT ? OFFSET ?`
   ).bind(...params, limit, offset).all();
   const data = (results || []).map(p => {
     const { password, ...rest } = p;
@@ -615,7 +615,7 @@ async function handleRSS(request, env) {
   const siteDesc = settings.site_description || '';
 
   const { results } = await env.DB.prepare(
-    "SELECT id, title, excerpt, content, created_at, published_at, updated_at, cover_image FROM posts WHERE status IN ('published','publish') ORDER BY published_at DESC LIMIT 20"
+    "SELECT id, title, excerpt, content, created_at, published_at, updated_at, cover_image FROM posts WHERE status IN ('published','publish') ORDER BY published_at DESC, id DESC LIMIT 20"
   ).all();
 
   const items = (results || []).map(p => {
