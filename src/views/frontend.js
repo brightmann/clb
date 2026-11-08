@@ -332,7 +332,16 @@ export function getFrontendHTML(settings, requestUrl) {
 
     function loadPosts(page) {
       page = page || 1;
-      var apiUrl = '/api/posts?page=' + page + '&limit=10';
+      var changed = (page !== currentPage);
+      currentPage = page;
+      // 同步地址栏 ?page= 参数，刷新/分享可回到同一页
+      try {
+        var _u = new URL(window.location.href);
+        if (page > 1) _u.searchParams.set('page', page); else _u.searchParams.delete('page');
+        window.history.replaceState(null, '', _u.pathname + _u.search);
+      } catch (e) {}
+      if (changed) window.scrollTo(0, 0);
+      var apiUrl = '/api/posts?page=' + page + '&limit=5';
       if (currentCategory) apiUrl += '&category=' + encodeURIComponent(currentCategory);
 
       fetch(apiUrl).then(function(r){return r.json()}).then(function(res) {

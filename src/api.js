@@ -30,7 +30,7 @@ async function purgePublicCaches(request) {
   await Promise.all([
     purgeCache(origin + '/'),
     purgeCache(origin + '/api/page-meta'),
-    purgeCache(origin + '/api/posts?page=1&limit=10'),
+    purgeCache(origin + '/api/posts?page=1&limit=5'),
     purgeCache(origin + '/api/stats'),
     purgeCache(origin + '/api/categories'),
     purgeCache(origin + '/api/links'),
